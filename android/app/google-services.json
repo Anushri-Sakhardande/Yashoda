@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "376373224058",
+    "project_id": "yashoda-243d6",
+    "storage_bucket": "yashoda-243d6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376373224058:android:3c01209ea9cc23f7f711c3",
+        "android_client_info": {
+          "package_name": "com.example.yashoda"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTx09m5l7gKckCkRLTpYZ0Z0i3akVCa-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
