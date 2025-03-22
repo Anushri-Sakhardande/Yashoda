@@ -54,4 +54,15 @@ class AuthService {
   Future<void> logout() async {
     await _auth.signOut();
   }
+
+  //Fetch user profile
+  Future<DocumentSnapshot?> getUserProfile(String uid) async {
+    try {
+      return await FirebaseFirestore.instance.collection("users").doc(uid).get();
+    } catch (e) {
+      print("Error fetching user profile: $e");
+      return null;
+    }
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/location_service.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,7 +15,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController pregnancyWeeksController = TextEditingController();
-  String role = "Mother"; // Default role
+  final TextEditingController babyMonthsController = TextEditingController();
+  String role = "Pregnant"; // Default role
   String location = "Fetching...";
 
   @override
@@ -45,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField(controller: passwordController, decoration: InputDecoration(labelText: "Password"), obscureText: true),
             DropdownButton<String>(
               value: role,
-              items: ["Mother", "Health Administrator"].map((String value) {
+              items: ["Pregnant","New Mother", "Health Administrator"].map((String value) {
                 return DropdownMenuItem(value: value, child: Text(value));
               }).toList(),
               onChanged: (newRole) {
@@ -54,8 +56,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 });
               },
             ),
-            if (role == "Mother")
+            if (role == "Pregnant")
               TextField(controller: pregnancyWeeksController, decoration: InputDecoration(labelText: "Weeks Pregnant"), keyboardType: TextInputType.number),
+            if (role == "New Mother")
+              TextField(controller: babyMonthsController, decoration: InputDecoration(labelText: "Baby Months"), keyboardType: TextInputType.number),
             SizedBox(height: 10),
             Text("Location: $location"),
             SizedBox(height: 20),
@@ -68,14 +72,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   role: role,
                   extraData: {
                     "location": location,
-                    if (role == "Mother") "pregnancyWeeks": int.tryParse(pregnancyWeeksController.text.trim()) ?? 0,
+                    if (role == "Pregnant") "pregnancyWeeks": int.tryParse(pregnancyWeeksController.text.trim()) ?? 0,
+                    if (role == "New Mother") "babyMonths": int.tryParse(babyMonthsController.text.trim()) ?? 0,
                   },
                 );
-                if (user != null) {
-                  //print("Registration Successful: ${user.email}");
-                  // Navigate to dashboard
+
+
+                if (user!=null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
                 }
               },
+
               child: Text("Register"),
             ),
           ],

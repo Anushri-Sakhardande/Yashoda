@@ -1,31 +1,26 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class LocationService {
   Future<String> getUserLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    try {
+      // Get position
+      Position position = await Geolocator.getCurrentPosition();
 
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return "Location services disabled";
-    }
+      // Get placemark from coordinates
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
 
-    // Check permissions
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return "Location permission denied";
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        return "${place.locality}, ${place.administrativeArea}, ${place.country}";
       }
-    }
 
-    if (permission == LocationPermission.deniedForever) {
-      return "Location permissions are permanently denied";
+      return "Location not found";
+    } catch (e) {
+      return "Error fetching location";
     }
-
-    // Get position
-    Position position = await Geolocator.getCurrentPosition();
-    return "${position.latitude}, ${position.longitude}";
   }
 }
