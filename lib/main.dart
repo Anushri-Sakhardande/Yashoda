@@ -44,7 +44,7 @@ class AuthWrapper extends StatelessWidget {
                 return LoginScreen();
               }
               var userData = userSnapshot.data!;
-              return userData["role"] == "New Mother" ? MotherDashboard() :userData["role"] =="Pregnant" ? PregnantDashboard() : AdminDashboard();
+              return userData["role"] == "New Mother" ? MotherDashboard(userProfile: userData) :userData["role"] =="Pregnant" ? PregnantDashboard(userProfile: userData) : AdminDashboard(userProfile: userData);
             },
           );
         }

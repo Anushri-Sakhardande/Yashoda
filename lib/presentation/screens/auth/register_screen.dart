@@ -76,8 +76,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (role == "New Mother") "babyMonths": int.tryParse(babyMonthsController.text.trim()) ?? 0,
                   },
                 );
-
-
                 if (user!=null) {
                   Navigator.pushReplacement(
                     context,

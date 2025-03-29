@@ -64,11 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       Widget dashboard;
                       if (role == "Pregnant") {
-                        dashboard = PregnantDashboard();
+                        dashboard = PregnantDashboard(userProfile: userDoc);
                       } else if (role == "New Mother") {
-                        dashboard = MotherDashboard();
+                        dashboard = MotherDashboard(userProfile: userDoc);
                       } else if (role == "Health Administrator") {
-                        dashboard = AdminDashboard();
+                        dashboard = AdminDashboard(userProfile: userDoc);
                       } else {
                         setState(() => errorMessage = "Unknown role. Please contact support.");
                         return;

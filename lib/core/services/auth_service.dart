@@ -23,6 +23,7 @@ class AuthService {
 
       if (user != null) {
         await _db.collection("users").doc(user.uid).set({
+          "uid": user.uid,
           "name": name,
           "email": email,
           "role": role,

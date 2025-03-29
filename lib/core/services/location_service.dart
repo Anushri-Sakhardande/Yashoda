@@ -19,7 +19,9 @@ class LocationService {
       }
 
       return "Location not found";
-    } catch (e) {
+    } catch (e,stacktrace) {
+      //print(e);
+      //print("Stacktrace: $stacktrace");
       return "Error fetching location";
     }
   }
