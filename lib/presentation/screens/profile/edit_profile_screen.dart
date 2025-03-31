@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../core/services/location_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String uid;
@@ -18,6 +19,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController pregnancyWeeksController;
   late TextEditingController babyMonthsController;
   String role = "";
+  double? latitude;
+  double? longitude;
+  bool isFetchingLocation = false;
 
   @override
   void initState() {
@@ -32,6 +36,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       text: widget.userData["role"] == "New Mother" ? widget.userData["babyMonths"].toString() : "",
     );
     role = widget.userData["role"];
+
+    latitude = widget.userData["latitude"];
+    longitude = widget.userData["longitude"];
   }
 
   @override
@@ -44,12 +51,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  Future<void> _fetchNewLocation() async {
+    setState(() => isFetchingLocation = true);
+
+    String loc = await LocationService().getUserLocation();
+    List<String> locParts = loc.split(",");
+
+    if (locParts.length >= 5) {
+      setState(() {
+        locationController.text = "${locParts[0]}, ${locParts[1]}, ${locParts[2]}";
+        latitude = double.tryParse(locParts[3]);
+        longitude = double.tryParse(locParts[4]);
+      });
+    } else {
+      setState(() {
+        locationController.text = "Location not found";
+      });
+    }
+
+    setState(() => isFetchingLocation = false);
+  }
+
   void _updateProfile() async {
     try {
       dynamic updatedData = {
         "name": nameController.text.trim(),
-        "email": emailController.text.trim(),
         "location": locationController.text.trim(),
+        "latitude": latitude,
+        "longitude": longitude,
       };
 
       if (role == "Pregnant") {
@@ -77,19 +106,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           children: [
             TextField(controller: nameController, decoration: InputDecoration(labelText: "Full Name")),
             TextField(controller: emailController, decoration: InputDecoration(labelText: "Email"), enabled: false),
+
             TextField(controller: locationController, decoration: InputDecoration(labelText: "Location")),
+
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: isFetchingLocation ? null : _fetchNewLocation,
+                  child: isFetchingLocation ? CircularProgressIndicator() : Text("Update Location"),
+                ),
+              ],
+            ),
+
             if (role == "Pregnant")
               TextField(
                 controller: pregnancyWeeksController,
                 decoration: InputDecoration(labelText: "Weeks Pregnant"),
                 keyboardType: TextInputType.number,
               ),
+
             if (role == "New Mother")
               TextField(
                 controller: babyMonthsController,
                 decoration: InputDecoration(labelText: "Baby Months"),
                 keyboardType: TextInputType.number,
               ),
+
             SizedBox(height: 20),
             ElevatedButton(onPressed: _updateProfile, child: Text("Save Changes")),
           ],

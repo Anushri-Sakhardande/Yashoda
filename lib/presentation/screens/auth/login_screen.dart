@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../admin_dashboard/admin_dashboard.dart';
 import '../mother_dashboard/mother_dashboard.dart';
 import '../pregnant_dashboard/pregnant_dashboard.dart';
+import '../miscarried_dashboard/miscarried_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -69,6 +70,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         dashboard = MotherDashboard(userProfile: userDoc);
                       } else if (role == "Health Administrator") {
                         dashboard = AdminDashboard(userProfile: userDoc);
+                      } else if(role=="Miscarriage") {
+                        dashboard = MiscarriedDashboard(userProfile: userDoc);
                       } else {
                         setState(() => errorMessage = "Unknown role. Please contact support.");
                         return;

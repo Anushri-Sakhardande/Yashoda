@@ -16,8 +16,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController pregnancyWeeksController = TextEditingController();
   final TextEditingController babyMonthsController = TextEditingController();
+
   String role = "Pregnant"; // Default role
   String location = "Fetching...";
+  double? latitude;
+  double? longitude;
 
   @override
   void initState() {
@@ -27,9 +30,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _getUserLocation() async {
     String loc = await LocationService().getUserLocation();
-    setState(() {
-      location = loc;
-    });
+    List<String> locParts = loc.split(",");
+
+    if (locParts.length >= 5) {
+      setState(() {
+        location = "${locParts[0]}, ${locParts[1]}, ${locParts[2]}";
+        latitude = double.tryParse(locParts[3]);
+        longitude = double.tryParse(locParts[4]);
+      });
+    } else {
+      setState(() {
+        location = "Location not found";
+      });
+    }
   }
 
   @override
@@ -45,9 +58,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextField(controller: nameController, decoration: InputDecoration(labelText: "Full Name")),
             TextField(controller: emailController, decoration: InputDecoration(labelText: "Email")),
             TextField(controller: passwordController, decoration: InputDecoration(labelText: "Password"), obscureText: true),
+
             DropdownButton<String>(
               value: role,
-              items: ["Pregnant","New Mother", "Health Administrator"].map((String value) {
+              items: ["Pregnant", "New Mother", "Miscarried", "Health Administrator"].map((String value) {
                 return DropdownMenuItem(value: value, child: Text(value));
               }).toList(),
               onChanged: (newRole) {
@@ -56,13 +70,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 });
               },
             ),
+
             if (role == "Pregnant")
               TextField(controller: pregnancyWeeksController, decoration: InputDecoration(labelText: "Weeks Pregnant"), keyboardType: TextInputType.number),
+
             if (role == "New Mother")
               TextField(controller: babyMonthsController, decoration: InputDecoration(labelText: "Baby Months"), keyboardType: TextInputType.number),
+
             SizedBox(height: 10),
             Text("Location: $location"),
             SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () async {
                 var user = await authService.registerUser(
@@ -72,18 +90,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   role: role,
                   extraData: {
                     "location": location,
+                    "latitude": latitude,
+                    "longitude": longitude,
                     if (role == "Pregnant") "pregnancyWeeks": int.tryParse(pregnancyWeeksController.text.trim()) ?? 0,
                     if (role == "New Mother") "babyMonths": int.tryParse(babyMonthsController.text.trim()) ?? 0,
                   },
                 );
-                if (user!=null) {
+
+                if (user != null) {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
                   );
                 }
               },
-
               child: Text("Register"),
             ),
           ],

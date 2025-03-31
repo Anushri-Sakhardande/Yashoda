@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yashoda/presentation/screens/appointment/search_admin.dart';
 import '../../widgets/custom_app_bar.dart';
 
 class PregnantDashboard extends StatelessWidget {
@@ -21,6 +22,18 @@ class PregnantDashboard extends StatelessWidget {
               onPressed: () {},
               child: Text("View Doctor Visits"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchAdminScreen(userUID: userProfile["uid"]),
+                  ),
+                );
+              },
+              child: Text("Assign Health Administrator"),
+            ),
+
           ],
         ),
       ),

@@ -15,7 +15,7 @@ class LocationService {
 
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        return "${place.locality}, ${place.administrativeArea}, ${place.country}";
+        return "${place.locality}, ${place.administrativeArea}, ${place.country},${position.latitude},${position.longitude}";
       }
 
       return "Location not found";
