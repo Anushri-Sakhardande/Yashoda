@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yashoda/presentation/screens/appointment/search_admin.dart';
 import '../../widgets/custom_app_bar.dart';
+import '../appointment/book_appointment.dart';
 
 class MotherDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -33,6 +34,18 @@ class MotherDashboard extends StatelessWidget {
               },
               child: Text("Assign Health Administrator"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookAppointmentScreen(userId: userProfile["uid"], adminId: userProfile["assignedAdmin"]),
+                  ),
+                );
+              },
+              child: Text("Book Appointment"),
+            ),
+
           ],
         ),
       ),
