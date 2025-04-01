@@ -4,8 +4,6 @@ class AppUser {
   final String email;
   final String role;
   final String location;
-  final double latitude;
-  final double longitude;
   final int? pregnancyWeeks; // Only for pregnant mothers
   final int? babyMonths; // Only for new mothers
   final List<String>? assignedAdmin; // List of admin UIDs
@@ -17,8 +15,6 @@ class AppUser {
     required this.email,
     required this.role,
     required this.location,
-    required this.latitude,
-    required this.longitude,
     this.pregnancyWeeks,
     this.babyMonths,
     this.assignedAdmin,
@@ -32,8 +28,6 @@ class AppUser {
       "email": email,
       "role": role,
       "location": location,
-      "latitude": latitude,
-      "longitude": longitude,
       "pregnancyWeeks": pregnancyWeeks,
       "babyMonths": babyMonths,
       "assignedAdmin": assignedAdmin,
@@ -48,8 +42,6 @@ class AppUser {
       email: map["email"],
       role: map["role"],
       location: map["location"],
-      latitude: map["latitude"],
-      longitude: map["longitude"],
       pregnancyWeeks: map["pregnancyWeeks"],
       babyMonths: map["babyMonths"],
       assignedAdmin: List<String>.from(map["assignedAdmin"] ?? []),

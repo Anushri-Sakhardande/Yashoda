@@ -19,8 +19,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController pregnancyWeeksController;
   late TextEditingController babyMonthsController;
   String role = "";
-  double? latitude;
-  double? longitude;
   bool isFetchingLocation = false;
 
   @override
@@ -36,9 +34,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       text: widget.userData["role"] == "New Mother" ? widget.userData["babyMonths"].toString() : "",
     );
     role = widget.userData["role"];
-
-    latitude = widget.userData["latitude"];
-    longitude = widget.userData["longitude"];
   }
 
   @override
@@ -55,19 +50,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => isFetchingLocation = true);
 
     String loc = await LocationService().getUserLocation();
-    List<String> locParts = loc.split(",");
 
-    if (locParts.length >= 5) {
       setState(() {
-        locationController.text = "${locParts[0]}, ${locParts[1]}, ${locParts[2]}";
-        latitude = double.tryParse(locParts[3]);
-        longitude = double.tryParse(locParts[4]);
+        locationController.text = loc;
       });
-    } else {
-      setState(() {
-        locationController.text = "Location not found";
-      });
-    }
 
     setState(() => isFetchingLocation = false);
   }
@@ -77,8 +63,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dynamic updatedData = {
         "name": nameController.text.trim(),
         "location": locationController.text.trim(),
-        "latitude": latitude,
-        "longitude": longitude,
       };
 
       if (role == "Pregnant") {

@@ -30,19 +30,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _getUserLocation() async {
     String loc = await LocationService().getUserLocation();
-    List<String> locParts = loc.split(",");
-
-    if (locParts.length >= 5) {
       setState(() {
-        location = "${locParts[0]}, ${locParts[1]}, ${locParts[2]}";
-        latitude = double.tryParse(locParts[3]);
-        longitude = double.tryParse(locParts[4]);
+        location = loc;
       });
-    } else {
-      setState(() {
-        location = "Location not found";
-      });
-    }
   }
 
   @override

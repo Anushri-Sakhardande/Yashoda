@@ -12,12 +12,17 @@ class SearchAdminScreen extends StatefulWidget {
 
 class _SearchAdminScreenState extends State<SearchAdminScreen> {
   TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> allAdmins = [];
   List<Map<String, dynamic>> searchResults = [];
   bool isLoading = false;
 
-  void _searchAdmins(String query) async {
-    if (query.isEmpty) return;
+  @override
+  void initState() {
+    super.initState();
+    _fetchAllAdmins();
+  }
 
+  Future<void> _fetchAllAdmins() async {
     setState(() => isLoading = true);
 
     QuerySnapshot adminsSnapshot = await FirebaseFirestore.instance
@@ -25,22 +30,33 @@ class _SearchAdminScreenState extends State<SearchAdminScreen> {
         .where("role", isEqualTo: "Health Administrator")
         .get();
 
-    List<Map<String, dynamic>> results = [];
-    for (var doc in adminsSnapshot.docs) {
+    List<Map<String, dynamic>> results = adminsSnapshot.docs.map((doc) {
       Map<String, dynamic> adminData = doc.data() as Map<String, dynamic>;
-      if (adminData["name"].toLowerCase().contains(query.toLowerCase())) {
-        results.add({
-          "uid": doc.id,
-          "name": adminData["name"],
-          "location": adminData["location"]
-        });
-      }
-    }
+      return {
+        "uid": doc.id,
+        "name": adminData["name"] ?? "Unknown",
+        "location": adminData["location"] ?? "No location"
+      };
+    }).toList();
 
     setState(() {
-      searchResults = results;
+      allAdmins = results;
+      searchResults = results; // Show all initially
       isLoading = false;
     });
+  }
+
+  void _searchAdmins(String query) {
+    if (query.isEmpty) {
+      setState(() => searchResults = allAdmins);
+      return;
+    }
+
+    List<Map<String, dynamic>> filtered = allAdmins.where((admin) {
+      return admin["name"].toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    setState(() => searchResults = filtered);
   }
 
   void _assignAdmin(String adminUID, String adminName) async {
@@ -61,17 +77,15 @@ class _SearchAdminScreenState extends State<SearchAdminScreen> {
           children: [
             TextField(
               controller: searchController,
+              onChanged: _searchAdmins, // Filter as user types
               decoration: InputDecoration(
                 labelText: "Search Admin by Name",
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () => _searchAdmins(searchController.text),
-                ),
+                suffixIcon: Icon(Icons.search),
               ),
             ),
             SizedBox(height: 20),
             isLoading
-                ? CircularProgressIndicator()
+                ? Center(child: CircularProgressIndicator())
                 : Expanded(
               child: ListView.builder(
                 itemCount: searchResults.length,
