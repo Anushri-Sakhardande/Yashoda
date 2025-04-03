@@ -53,17 +53,17 @@ class PregnantDashboard extends StatelessWidget {
                   children: [
                     StreamBuilder<DocumentSnapshot>(
                       stream:
-                          FirebaseFirestore.instance
-                              .collection("health_status")
-                              .doc(userProfile["uid"])
-                              .snapshots(),
+                      FirebaseFirestore.instance
+                          .collection("health_status")
+                          .doc(userProfile["uid"])
+                          .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         }
 
                         var healthData =
-                            snapshot.data!.data() as Map<String, dynamic>?;
+                        snapshot.data!.data() as Map<String, dynamic>?;
 
                         if (healthData == null) {
                           return Padding(
@@ -79,7 +79,7 @@ class PregnantDashboard extends StatelessWidget {
                           child: HealthStatusCircle(
                             healthData: healthData,
                             centerText:
-                                userProfile["pregnancyWeeks"].toString() +
+                            userProfile["pregnancyWeeks"].toString() +
                                 "Weeks of Pregnancy",
                           ),
                         );
@@ -92,9 +92,10 @@ class PregnantDashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => HealthStatusScreen(
-                              userId: userProfile["uid"],
-                            ),
+                                (context) =>
+                                HealthStatusScreen(
+                                  userId: userProfile["uid"],
+                                ),
                           ),
                         );
                       },
@@ -117,21 +118,35 @@ class PregnantDashboard extends StatelessWidget {
                       child: UpcomingAppointmentsScreen(
                         userId: userProfile["uid"],
                         isAdmin:
-                            false, // Change to true if it's an admin dashboard
+                        false, // Change to true if it's an admin dashboard
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => BookAppointmentScreen(
-                                  userId: userProfile["uid"],
-                                  adminId: userProfile["assignedAdmin"],
-                                ),
-                          ),
-                        );
+                        if (userProfile["assignedAdmin"] != "") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                  BookAppointmentScreen(
+                                    userId: userProfile["uid"],
+                                    adminId: userProfile["assignedAdmin"],
+                                  ),
+                            ),
+                          );
+                        }else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                  SearchAdminScreen(
+                                    userUID: userProfile["uid"],
+                                  ),
+                            ),
+                          );
+                        }
                       },
                       child: Text("Book Appointment"),
                     ),
@@ -170,21 +185,6 @@ class PregnantDashboard extends StatelessWidget {
                               // Navigate to self-care tips
                             },
                             child: Text("Self-Care & Wellness"),
-                          ),
-
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => SearchAdminScreen(
-                                        userUID: userProfile["uid"],
-                                      ),
-                                ),
-                              );
-                            },
-                            child: Text("Assign Health Administrator"),
                           ),
                         ],
                       ),

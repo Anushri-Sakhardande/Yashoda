@@ -121,16 +121,30 @@ class MiscarriedDashboard extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => BookAppointmentScreen(
-                                  userId: userProfile["uid"],
-                                  adminId: userProfile["assignedAdmin"],
-                                ),
-                          ),
-                        );
+                        if (userProfile["assignedAdmin"] != "") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                  BookAppointmentScreen(
+                                    userId: userProfile["uid"],
+                                    adminId: userProfile["assignedAdmin"],
+                                  ),
+                            ),
+                          );
+                        }else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                  SearchAdminScreen(
+                                    userUID: userProfile["uid"],
+                                  ),
+                            ),
+                          );
+                        }
                       },
                       child: Text("Book Appointment"),
                     ),
