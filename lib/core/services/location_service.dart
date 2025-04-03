@@ -15,13 +15,11 @@ class LocationService {
 
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        return "${place.locality}, ${place.administrativeArea}, ${place.country},${position.latitude},${position.longitude}";
+        return "${place.locality}, ${place.administrativeArea}, ${place.country}";
       }
 
       return "Location not found";
-    } catch (e,stacktrace) {
-      //print(e);
-      //print("Stacktrace: $stacktrace");
+    } catch (e) {
       return "Error fetching location";
     }
   }

@@ -61,7 +61,7 @@ class AuthService {
     try {
       return await FirebaseFirestore.instance.collection("users").doc(uid).get();
     } catch (e) {
-      print("Error fetching user profile: $e");
+      //print("Error fetching user profile: $e");
       return null;
     }
   }

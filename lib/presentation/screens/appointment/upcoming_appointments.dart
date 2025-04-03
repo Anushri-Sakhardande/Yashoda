@@ -20,6 +20,10 @@ class UpcomingAppointmentsScreen extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
 
+        if (snapshot.data!.docs.isEmpty) {
+          return Center(child: Text("No upcoming appointments."));
+        }
+
         var appointments = snapshot.data!.docs;
 
         return ListView.builder(

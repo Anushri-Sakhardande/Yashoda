@@ -66,9 +66,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       };
 
       if (role == "Pregnant") {
-        updatedData["pregnancyWeeks"] = int.tryParse(pregnancyWeeksController.text.trim()) ?? 0;
+        updatedData["pregnancyWeeks"] = pregnancyWeeksController.text.trim();
       } else if (role == "New Mother") {
-        updatedData["babyMonths"] = int.tryParse(babyMonthsController.text.trim()) ?? 0;
+        updatedData["babyMonths"] = babyMonthsController.text.trim();
       }
 
       await FirebaseFirestore.instance.collection("users").doc(widget.uid).update(updatedData);

@@ -7,10 +7,14 @@ import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/admin_dashboard/admin_dashboard.dart';
 import 'presentation/screens/mother_dashboard/mother_dashboard.dart';
 import 'presentation/screens/miscarried_dashboard/miscarried_dashboard.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
   runApp(MyApp());
 }
 
@@ -82,6 +86,8 @@ class AuthWrapper extends StatelessWidget {
 
 // Loading screen while fetching user data
 class InitialLoadingScreen extends StatelessWidget {
+  const InitialLoadingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,6 +98,8 @@ class InitialLoadingScreen extends StatelessWidget {
 
 // Error screen if an unknown role is encountered
 class ErrorScreen extends StatelessWidget {
+  const ErrorScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

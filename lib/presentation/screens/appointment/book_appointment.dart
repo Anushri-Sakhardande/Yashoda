@@ -80,7 +80,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             Text("Select Purpose"),
             DropdownButton<String>(
               value: selectedPurpose,
-              items: ["Routine Checkup", "Inoculation", "Other"].map((purpose) {
+              items: ["Routine Checkup", "Inoculation","Test", "Other"].map((purpose) {
                 return DropdownMenuItem(value: purpose, child: Text(purpose));
               }).toList(),
               onChanged: (value) => setState(() => selectedPurpose = value!),
