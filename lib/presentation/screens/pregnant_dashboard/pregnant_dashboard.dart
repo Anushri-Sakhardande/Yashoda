@@ -121,9 +121,10 @@ class PregnantDashboard extends StatelessWidget {
                         false, // Change to true if it's an admin dashboard
                       ),
                     ),
+
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile["assignedAdmin"] != "") {
+                        if (userProfile["assignedAdmin"] != null) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
