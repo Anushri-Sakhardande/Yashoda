@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,8 +13,14 @@ class AuthService {
     required String name,
     required String role,
     required Map<String, dynamic> extraData,
+    required BuildContext context,  // Pass context for SnackBar
   }) async {
     try {
+      if (password.length < 6) {
+        _showSnackBar(context, "Password must be at least 6 characters long.");
+        return null;
+      }
+
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -27,26 +34,51 @@ class AuthService {
           "name": name,
           "email": email,
           "role": role,
-          ...extraData,  // Additional data like location, pregnancy stage
+          ...extraData,
         });
       }
       return user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        _showSnackBar(context, "The password is too weak.");
+      } else {
+        _showSnackBar(context, "Registration failed: ${e.message}");
+      }
+      return null;
     } catch (e) {
-      //print("Error: $e");
+      _showSnackBar(context, "An error occurred: $e");
       return null;
     }
   }
 
   // Login User
-  Future<User?> loginUser({required String email, required String password}) async {
+  Future<User?> loginUser({
+    required String email,
+    required String password,
+    required BuildContext context,  // Pass context for SnackBar
+  }) async {
     try {
+      if (password.length < 6) {
+        _showSnackBar(context, "Password must be at least 6 characters long.");
+        return null;
+      }
+
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        _showSnackBar(context, "Incorrect password.");
+      } else if (e.code == 'user-not-found') {
+        _showSnackBar(context, "No user found with this email.");
+      } else {
+        _showSnackBar(context, "Login failed: ${e.message}");
+      }
+      return null;
     } catch (e) {
-      //print("Login Error: $e");
+      _showSnackBar(context, "An error occurred: $e");
       return null;
     }
   }
@@ -56,14 +88,24 @@ class AuthService {
     await _auth.signOut();
   }
 
-  //Fetch user profile
-  Future<DocumentSnapshot?> getUserProfile(String uid) async {
+  // Fetch user profile
+  Future<DocumentSnapshot?> getUserProfile(String uid, BuildContext context) async {
     try {
       return await FirebaseFirestore.instance.collection("users").doc(uid).get();
     } catch (e) {
-      //print("Error fetching user profile: $e");
+      _showSnackBar(context, "Error fetching user profile: $e");
       return null;
     }
   }
 
+  // Helper function to show SnackBar
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 }

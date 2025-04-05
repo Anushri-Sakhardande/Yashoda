@@ -128,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     var user = await authService.loginUser(
                       email: emailController.text.trim(),
                       password: passwordController.text.trim(),
+                      context: context,
                     );
 
                     if (user != null) {

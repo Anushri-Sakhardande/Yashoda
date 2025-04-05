@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     "longitude": longitude,
                     if (role == "Pregnant") "pregnancyWeeks": int.tryParse(pregnancyWeeksController.text.trim()) ?? 0,
                     if (role == "New Mother") "babyMonths": int.tryParse(babyMonthsController.text.trim()) ?? 0,
-                  },
+                  }, context: context,
                 );
 
                 if (user != null) {
