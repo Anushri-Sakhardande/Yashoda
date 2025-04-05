@@ -7,6 +7,7 @@ import '../health_status/health_status_update.dart';
 import '../../widgets/health_update_banner.dart';
 import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
+import '../../widgets/reminders_card.dart';
 
 class MiscarriedDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -121,7 +122,7 @@ class MiscarriedDashboard extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile["assignedAdmin"] != "") {
+                        if (userProfile.exists && userProfile.data()?.containsKey("assignedAdmin") == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -158,6 +159,10 @@ class MiscarriedDashboard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                    Container(
+                      height: 200, // Define height to prevent layout issues
+                      child: RemindersCard(),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),

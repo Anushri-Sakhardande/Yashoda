@@ -137,22 +137,22 @@ class _RemindersCardState extends State<RemindersCard> {
       child: Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
-    child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            ElevatedButton(
-              onPressed: _showAddReminderDialog,
-              child: Text("+"),
-            ),
-            ..._reminders.map((reminder) => ListTile(
-              title: Text(reminder['title']),
-              subtitle: Text(
-                  "${reminder['hour'].toString().padLeft(2, '0')}:${reminder['minute'].toString().padLeft(2, '0')}"),
-            )),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: _showAddReminderDialog,
+                child: Text("+"),
+              ),
+              ..._reminders.map((reminder) => ListTile(
+                title: Text(reminder['title']),
+                subtitle: Text(
+                    "${reminder['hour'].toString().padLeft(2, '0')}:${reminder['minute'].toString().padLeft(2, '0')}"),
+              )),
 
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

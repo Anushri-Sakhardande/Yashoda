@@ -119,12 +119,12 @@ class MotherDashboard extends StatelessWidget {
                       child: UpcomingAppointmentsScreen(
                         userId: userProfile["uid"],
                         isAdmin:
-                            false, // Change to true if it's an admin dashboard
+                            false,
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile["assignedAdmin"] != "") {
+                        if (userProfile.exists && userProfile.data()?.containsKey("assignedAdmin") == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

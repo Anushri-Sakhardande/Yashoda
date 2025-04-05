@@ -13,7 +13,6 @@ import 'package:timezone/data/latest_all.dart' as tz;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
   runApp(MyApp());
 }

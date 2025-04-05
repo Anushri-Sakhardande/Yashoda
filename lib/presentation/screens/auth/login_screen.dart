@@ -134,6 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       try {
                         // Fetch role from Firestore
                         DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+                        var userDocMap = userDoc.data() as Map<String, dynamic>?;
 
                         if (userDoc.exists) {
                           String role = userDoc.get("role");
@@ -141,13 +142,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           Widget dashboard;
                           if (role == "Pregnant") {
-                            dashboard = PregnantDashboard(userProfile: userDoc);
+                            dashboard = PregnantDashboard(userProfile: userDocMap);
                           } else if (role == "New Mother") {
-                            dashboard = MotherDashboard(userProfile: userDoc);
+                            dashboard = MotherDashboard(userProfile: userDocMap);
                           } else if (role == "Health Administrator") {
-                            dashboard = AdminDashboard(userProfile: userDoc);
+                            dashboard = AdminDashboard(userProfile: userDocMap);
                           } else if (role == "Miscarriage") {
-                            dashboard = MiscarriedDashboard(userProfile: userDoc);
+                            dashboard = MiscarriedDashboard(userProfile: userDocMap);
                           } else {
                             setState(() => errorMessage = "Unknown role. Please contact support.");
                             return;

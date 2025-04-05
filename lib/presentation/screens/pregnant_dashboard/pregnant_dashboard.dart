@@ -7,6 +7,7 @@ import '../health_status/health_status_update.dart';
 import '../../widgets/health_update_banner.dart';
 import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
+import '../../widgets/reminders_card.dart';
 
 class PregnantDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -124,7 +125,7 @@ class PregnantDashboard extends StatelessWidget {
 
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile["assignedAdmin"] != null) {
+                        if (userProfile.exists && userProfile.data()?.containsKey("assignedAdmin") == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -161,6 +162,11 @@ class PregnantDashboard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+
+                    Container(
+                      height: 200, // Define height to prevent layout issues
+                      child: RemindersCard(),
                     ),
 
                     Padding(
