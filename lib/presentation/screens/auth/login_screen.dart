@@ -139,7 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         if (userDoc.exists) {
                           String role = userDoc.get("role");
-                          print("User Role: $role"); // Debugging
 
                           Widget dashboard;
                           if (role == "Pregnant") {

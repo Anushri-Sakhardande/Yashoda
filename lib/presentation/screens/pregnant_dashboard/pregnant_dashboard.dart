@@ -8,6 +8,7 @@ import '../../widgets/health_update_banner.dart';
 import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
+import '../../widgets/health_graph.dart';
 
 class PregnantDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -52,21 +53,21 @@ class PregnantDashboard extends StatelessWidget {
               child: Expanded(
                 child: Column(
                   children: [
-                    StreamBuilder<DocumentSnapshot>(
+                    StreamBuilder<QuerySnapshot>(
                       stream:
-                      FirebaseFirestore.instance
-                          .collection("health_status")
-                          .doc(userProfile["uid"])
-                          .snapshots(),
+                          FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(userProfile["uid"])
+                              .collection("healthStatusEntries")
+                              .orderBy("lastUpdated", descending: true)
+                              .limit(1) // Only fetch the most recent entry
+                              .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         }
 
-                        var healthData =
-                        snapshot.data!.data() as Map<String, dynamic>?;
-
-                        if (healthData == null) {
+                        if (snapshot.data!.docs.isEmpty) {
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
@@ -76,16 +77,24 @@ class PregnantDashboard extends StatelessWidget {
                           );
                         }
 
+                        var latestHealthData =
+                            snapshot.data!.docs.first.data()
+                                as Map<String, dynamic>;
+
                         return Center(
                           child: HealthStatusCircle(
-                            healthData: healthData,
+                            healthData: latestHealthData,
                             centerText:
-                            userProfile["pregnancyWeeks"].toString() +
-                                "Weeks of Pregnancy",
+                                "${userProfile["pregnancyWeeks"]} Weeks of Pregnancy",
                           ),
                         );
                       },
                     ),
+
+                    SizedBox(height: 10),
+
+                    HealthLineChart(userId: userProfile["uid"]),
+
                     // Navigate to Health Status Update
                     ElevatedButton(
                       onPressed: () {
@@ -93,8 +102,7 @@ class PregnantDashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) =>
-                                HealthStatusScreen(
+                                (context) => HealthStatusScreen(
                                   userId: userProfile["uid"],
                                 ),
                           ),
@@ -119,31 +127,31 @@ class PregnantDashboard extends StatelessWidget {
                       child: UpcomingAppointmentsScreen(
                         userId: userProfile["uid"],
                         isAdmin:
-                        false, // Change to true if it's an admin dashboard
+                            false, // Change to true if it's an admin dashboard
                       ),
                     ),
 
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile.exists && userProfile.data()?.containsKey("assignedAdmin") == true) {
+                        if (userProfile.exists &&
+                            userProfile.data()?.containsKey("assignedAdmin") ==
+                                true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder:
-                                  (context) =>
-                                  BookAppointmentScreen(
+                                  (context) => BookAppointmentScreen(
                                     userId: userProfile["uid"],
                                     adminId: userProfile["assignedAdmin"],
                                   ),
                             ),
                           );
-                        }else {
+                        } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder:
-                                  (context) =>
-                                  SearchAdminScreen(
+                                  (context) => SearchAdminScreen(
                                     userUID: userProfile["uid"],
                                   ),
                             ),

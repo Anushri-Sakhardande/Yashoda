@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class HealthStatusScreen extends StatefulWidget {
   final String userId;
 
@@ -14,7 +13,6 @@ class HealthStatusScreen extends StatefulWidget {
 class _HealthStatusScreenState extends State<HealthStatusScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for input fields
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _bloodPressureController = TextEditingController();
   final TextEditingController _hemoglobinController = TextEditingController();
@@ -24,35 +22,6 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
 
   bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchHealthStatus();
-  }
-
-  Future<void> _fetchHealthStatus() async {
-    try {
-      DocumentSnapshot healthStatusDoc = await FirebaseFirestore.instance
-          .collection('health_status')
-          .doc(widget.userId)
-          .get();
-
-      if (healthStatusDoc.exists) {
-        Map<String, dynamic> data = healthStatusDoc.data() as Map<String, dynamic>;
-        setState(() {
-          _weightController.text = data['weight']?.toString() ?? '';
-          _bloodPressureController.text = data['bloodPressure'] ?? '';
-          _hemoglobinController.text = data['hemoglobin']?.toString() ?? '';
-          _symptomsController.text = data['symptoms'] ?? '';
-          _exerciseRoutineController.text = data['exerciseRoutine'] ?? '';
-          _dietaryHabitsController.text = data['dietaryHabits'] ?? '';
-        });
-      }
-    } catch (e) {
-      print("Error fetching health status: $e");
-    }
-  }
-
   Future<void> _updateHealthStatus() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -60,18 +29,23 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
       });
 
       try {
-        await FirebaseFirestore.instance.collection('health_status').doc(widget.userId).set({
-          "userId": widget.userId,
+        final entryData = {
           "weight": double.tryParse(_weightController.text) ?? 0.0,
           "bloodPressure": _bloodPressureController.text,
           "hemoglobin": double.tryParse(_hemoglobinController.text) ?? 0.0,
-          "symptoms": _symptomsController.text,
+          "symptoms": _symptomsController.text.split(",").map((s) => s.trim()).toList(),
           "exerciseRoutine": _exerciseRoutineController.text,
           "dietaryHabits": _dietaryHabitsController.text,
           "lastUpdated": Timestamp.now(),
-        });
+        };
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Health status updated successfully!")));
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(widget.userId)
+            .collection("healthStatusEntries")
+            .add(entryData);
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Health status added successfully!")));
       } catch (e) {
         print("Error updating health status: $e");
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to update health status")));
@@ -86,7 +60,7 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Update Health Status")),
+      appBar: AppBar(title: Text("Add Health Status")),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Form(
@@ -112,7 +86,10 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
               ),
               TextFormField(
                 controller: _symptomsController,
-                decoration: InputDecoration(labelText: "Symptoms"),
+                decoration: InputDecoration(
+                    labelText: "Symptoms",
+                    hintText: "Separate multiple symptoms with commas"
+                ),
                 validator: (value) => value!.isEmpty ? "Please enter any symptoms" : null,
               ),
               TextFormField(
@@ -130,7 +107,7 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
                   ? Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                 onPressed: _updateHealthStatus,
-                child: Text("Update Health Status"),
+                child: Text("Add Entry"),
               ),
             ],
           ),

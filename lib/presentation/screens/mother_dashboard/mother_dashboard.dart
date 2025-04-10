@@ -8,6 +8,7 @@ import '../../widgets/health_update_banner.dart';
 import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
+import '../../widgets/health_graph.dart';
 
 class MotherDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -52,21 +53,20 @@ class MotherDashboard extends StatelessWidget {
               child: Expanded(
                 child: Column(
                   children: [
-                    StreamBuilder<DocumentSnapshot>(
-                      stream:
-                          FirebaseFirestore.instance
-                              .collection("health_status")
-                              .doc(userProfile["uid"])
-                              .snapshots(),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(userProfile["uid"])
+                          .collection("healthStatusEntries")
+                          .orderBy("lastUpdated", descending: true)
+                          .limit(1) // Only fetch the most recent entry
+                          .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         }
 
-                        var healthData =
-                            snapshot.data!.data() as Map<String, dynamic>?;
-
-                        if (healthData == null) {
+                        if (snapshot.data!.docs.isEmpty) {
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: Text(
@@ -76,16 +76,22 @@ class MotherDashboard extends StatelessWidget {
                           );
                         }
 
+                        var latestHealthData =
+                        snapshot.data!.docs.first.data() as Map<String, dynamic>;
+
                         return Center(
                           child: HealthStatusCircle(
-                            healthData: healthData,
-                            centerText:
-                                userProfile["babyMonths"].toString() +
-                                " Months of Baby",
+                            healthData: latestHealthData,
+                            centerText: "${userProfile["babyMonths"]} Month Old Baby",
                           ),
                         );
                       },
                     ),
+
+                    SizedBox(height: 10),
+
+                    HealthLineChart(userId: userProfile["uid"]),
+
                     // Navigate to Health Status Update
                     ElevatedButton(
                       onPressed: () {
