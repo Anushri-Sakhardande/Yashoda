@@ -9,6 +9,7 @@ import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
 import '../../widgets/health_graph.dart';
+import '../community_chat/group_chat_screen.dart';
 
 class MotherDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -46,7 +47,6 @@ class MotherDashboard extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 10),
 
             SingleChildScrollView(
@@ -180,13 +180,33 @@ class MotherDashboard extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to mental health support resources
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (
+                                      context) => const MentalHealthScreen(),
+                                ),
+                              );
                             },
+                            icon: Icon(Icons.self_improvement),
+                            label: Text("Mental Health & Wellness"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
+
                             child: Text("Mental Health & Counseling"),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to community support groups
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      GroupChatScreen(groupName: "miscarried"),
+                                ),
+                              );
                             },
                             child: Text("Community Support Groups"),
                           ),

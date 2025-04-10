@@ -8,6 +8,7 @@ import '../../widgets/health_update_banner.dart';
 import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
+import '../community_chat/group_chat_screen.dart';
 import '../../widgets/health_graph.dart';
 
 class PregnantDashboard extends StatelessWidget {
@@ -180,20 +181,39 @@ class PregnantDashboard extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigate to mental health support resources
-                            },
-                            child: Text("Mental Health & Counseling"),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to mental health support resources
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (
+                                    context) => const MentalHealthScreen(),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.self_improvement),
+                          label: Text("Mental Health & Wellness"),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 50),
                           ),
-                          SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Navigate to community support groups
-                            },
-                            child: Text("Community Support Groups"),
-                          ),
+
+                          child: Text("Mental Health & Counseling"),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to community support groups
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    GroupChatScreen(groupName: "miscarried"),
+                              ),
+                            );
+                          },
+                          child: Text("Community Support Groups"),
+                        ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {

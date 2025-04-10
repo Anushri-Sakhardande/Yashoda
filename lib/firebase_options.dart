@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyC6k3XZVSlujobUxm19UoXkl-hd0ZT75o0',
     appId: '1:376373224058:web:8e1af5754a193ba7f711c3',
     messagingSenderId: '376373224058',
-    projectId: 'yashoda-243d6',
+    projectId: 'yashoda-ff738',
     authDomain: 'yashoda-243d6.firebaseapp.com',
     storageBucket: 'yashoda-243d6.firebasestorage.app',
     measurementId: 'G-HRYRT0VESJ',

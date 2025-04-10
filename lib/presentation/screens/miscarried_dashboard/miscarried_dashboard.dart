@@ -9,6 +9,8 @@ import '../../widgets/health_circle.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
 import '../../widgets/health_graph.dart';
+import '../community_chat/group_chat_screen.dart';
+import '../mental_health/MentalHealthScreen.dart'; // 👈 Import your mental health screen
 
 class MiscarriedDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -28,7 +30,6 @@ class MiscarriedDashboard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             HealthStatusBanner(userId: userProfile["uid"]),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -46,7 +47,6 @@ class MiscarriedDashboard extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 10),
 
             SingleChildScrollView(
@@ -77,7 +77,9 @@ class MiscarriedDashboard extends StatelessWidget {
                         }
 
                         var latestHealthData =
-                        snapshot.data!.docs.first.data() as Map<String, dynamic>;
+                        snapshot.data!.docs.first.data() as Map<
+                            String,
+                            dynamic>;
 
                         return Center(
                           child: HealthStatusCircle(
@@ -99,7 +101,8 @@ class MiscarriedDashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => HealthStatusScreen(
+                                (context) =>
+                                HealthStatusScreen(
                                   userId: userProfile["uid"],
                                 ),
                           ),
@@ -125,12 +128,14 @@ class MiscarriedDashboard extends StatelessWidget {
                       child: UpcomingAppointmentsScreen(
                         userId: userProfile["uid"],
                         isAdmin:
-                            false, // Change to true if it's an admin dashboard
+                        false, // Change to true if it's an admin dashboard
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile.exists && userProfile.data()?.containsKey("assignedAdmin") == true) {
+                        if (userProfile.exists && userProfile
+                            .data()
+                            ?.containsKey("assignedAdmin") == true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -142,7 +147,7 @@ class MiscarriedDashboard extends StatelessWidget {
                                   ),
                             ),
                           );
-                        }else {
+                        } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -179,13 +184,33 @@ class MiscarriedDashboard extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to mental health support resources
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (
+                                      context) => const MentalHealthScreen(),
+                                ),
+                              );
                             },
+                            icon: Icon(Icons.self_improvement),
+                            label: Text("Mental Health & Wellness"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
+
                             child: Text("Mental Health & Counseling"),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to community support groups
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      GroupChatScreen(groupName: "miscarried"),
+                                ),
+                              );
                             },
                             child: Text("Community Support Groups"),
                           ),
@@ -203,7 +228,8 @@ class MiscarriedDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder:
-                                      (context) => SearchAdminScreen(
+                                      (context) =>
+                                      SearchAdminScreen(
                                         userUID: userProfile["uid"],
                                       ),
                                 ),
