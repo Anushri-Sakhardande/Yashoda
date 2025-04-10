@@ -30,7 +30,7 @@ class HealthStatusCircle extends StatelessWidget {
               height: radius * 2,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.yellowAccent.withOpacity(0.1),
+                color: Colors.blueAccent.withOpacity(0.1),
               ),
               child: Center(
                 child: Text(
@@ -49,7 +49,7 @@ class HealthStatusCircle extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.circle, size: 12, color: Colors.orange),
+                    Icon(Icons.circle, size: 12, color: Colors.blue),
                     SizedBox(height: 8),
                     Container(
                       constraints: BoxConstraints(maxWidth: 100), // Prevent text overflow
