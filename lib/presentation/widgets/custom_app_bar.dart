@@ -15,6 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
+      backgroundColor: Color(0xFFF4B860),
       actions: [
         PopupMenuButton<String>(
           onSelected: (String choice) {

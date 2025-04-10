@@ -10,6 +10,7 @@ import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
 import '../community_chat/group_chat_screen.dart';
 import '../../widgets/health_graph.dart';
+import '../mental_health/MentalHealthScreen.dart';
 
 class PregnantDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -29,7 +30,6 @@ class PregnantDashboard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             HealthStatusBanner(userId: userProfile["uid"]),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -47,22 +47,19 @@ class PregnantDashboard extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 10),
-
             SingleChildScrollView(
               child: Expanded(
                 child: Column(
                   children: [
                     StreamBuilder<QuerySnapshot>(
-                      stream:
-                          FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(userProfile["uid"])
-                              .collection("healthStatusEntries")
-                              .orderBy("lastUpdated", descending: true)
-                              .limit(1) // Only fetch the most recent entry
-                              .snapshots(),
+                      stream: FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(userProfile["uid"])
+                          .collection("healthStatusEntries")
+                          .orderBy("lastUpdated", descending: true)
+                          .limit(1) // Only fetch the most recent entry
+                          .snapshots(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
@@ -78,9 +75,8 @@ class PregnantDashboard extends StatelessWidget {
                           );
                         }
 
-                        var latestHealthData =
-                            snapshot.data!.docs.first.data()
-                                as Map<String, dynamic>;
+                        var latestHealthData = snapshot.data!.docs.first.data()
+                            as Map<String, dynamic>;
 
                         return Center(
                           child: HealthStatusCircle(
@@ -102,10 +98,9 @@ class PregnantDashboard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder:
-                                (context) => HealthStatusScreen(
-                                  userId: userProfile["uid"],
-                                ),
+                            builder: (context) => HealthStatusScreen(
+                              userId: userProfile["uid"],
+                            ),
                           ),
                         );
                       },
@@ -140,21 +135,19 @@ class PregnantDashboard extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder:
-                                  (context) => BookAppointmentScreen(
-                                    userId: userProfile["uid"],
-                                    adminId: userProfile["assignedAdmin"],
-                                  ),
+                              builder: (context) => BookAppointmentScreen(
+                                userId: userProfile["uid"],
+                                adminId: userProfile["assignedAdmin"],
+                              ),
                             ),
                           );
                         } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder:
-                                  (context) => SearchAdminScreen(
-                                    userUID: userProfile["uid"],
-                                  ),
+                              builder: (context) => SearchAdminScreen(
+                                userUID: userProfile["uid"],
+                              ),
                             ),
                           );
                         }
@@ -181,45 +174,57 @@ class PregnantDashboard extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to mental health support resources
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (
-                                    context) => const MentalHealthScreen(),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.self_improvement),
-                          label: Text("Mental Health & Wellness"),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 50),
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // Navigate to mental health support resources
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MentalHealthScreen(),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.self_improvement),
+                            label: Text("Mental Health & Wellness"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
                           ),
-
-                          child: Text("Mental Health & Counseling"),
-                        ),
-                        SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Navigate to community support groups
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    GroupChatScreen(groupName: "miscarried"),
-                              ),
-                            );
-                          },
-                          child: Text("Community Support Groups"),
-                        ),
+                          SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Navigate to community support groups
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      GroupChatScreen(groupName: "pregnant", userName: userProfile['name']),
+                                ),
+                              );
+                            },
+                            child: Text("Community Support Groups"),
+                          ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
                               // Navigate to self-care tips
                             },
                             child: Text("Self-Care & Wellness"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchAdminScreen(
+                                    userUID: userProfile["uid"],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text("Assign Health Administrator"),
                           ),
                         ],
                       ),

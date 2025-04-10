@@ -10,6 +10,7 @@ import '../appointment/upcoming_appointments.dart';
 import '../../widgets/reminders_card.dart';
 import '../../widgets/health_graph.dart';
 import '../community_chat/group_chat_screen.dart';
+import '../mental_health/MentalHealthScreen.dart';
 
 class MotherDashboard extends StatelessWidget {
   final dynamic userProfile;
@@ -177,7 +178,7 @@ class MotherDashboard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
-                          ElevatedButton(
+                          ElevatedButton.icon(
                             onPressed: () {
                               // Navigate to mental health support resources
                               Navigator.push(
@@ -193,8 +194,6 @@ class MotherDashboard extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 50),
                             ),
-
-                            child: Text("Mental Health & Counseling"),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton(
@@ -204,7 +203,7 @@ class MotherDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      GroupChatScreen(groupName: "miscarried"),
+                                      GroupChatScreen(groupName: "mother",userName: userProfile['name']),
                                 ),
                               );
                             },

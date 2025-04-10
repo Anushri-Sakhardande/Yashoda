@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupChatScreen extends StatefulWidget {
   final String groupName;
+  final String userName;
 
-  GroupChatScreen({required this.groupName});
+  GroupChatScreen({required this.groupName,required this.userName});
 
   @override
   _GroupChatScreenState createState() => _GroupChatScreenState();
@@ -23,10 +24,9 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             .collection('messages')
             .add({
           'message': message,
-          'sender': 'Anonymous',
+          'sender': widget.userName,
           'timestamp': FieldValue.serverTimestamp(),
         });
-        print("✅ Message sent: $message");
         _messageController.clear();
       } catch (e) {
         print("❌ Failed to send message: $e");
