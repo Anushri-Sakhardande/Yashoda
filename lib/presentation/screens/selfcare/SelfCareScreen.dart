@@ -15,16 +15,22 @@ class SelfCareScreen extends StatelessWidget {
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Text(
-        title,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Row(
+        children: [
+          Icon(Icons.ondemand_video_rounded, color: Color(0xFFF4B942)),
+          SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
 
   Widget videoTile(String title, String url) {
     return ListTile(
-      leading: Icon(Icons.play_circle_fill, color: Colors.pinkAccent),
+      leading: Icon(Icons.play_circle_fill, color: Color(0xFFF4B942)),
       title: Text(title),
       onTap: () => _launchURL(url),
     );
@@ -34,6 +40,7 @@ class SelfCareScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFFF4B942),
         title: Text("Self-Care & Wellness"),
       ),
       body: SingleChildScrollView(
@@ -42,21 +49,22 @@ class SelfCareScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            Text("Hi ${userProfile["name"]}, here are some self-care tips curated for you ❤️"),
+            Text(
+              "Hi ${userProfile["name"]}, here are some self-care tips curated for you ❤️",
+              style: TextStyle(fontSize: 16),
+            ),
 
-            sectionTitle("🌿 Skincare Tips for Moms"),
-            videoTile("Skincare for Pregnant Women", "https://www.youtube.com/watch?v=VIDEO_ID_1"),
-            videoTile("Postpartum Skincare Routine", "https://www.youtube.com/watch?v=VIDEO_ID_2"),
-            videoTile("Skincare After Miscarriage", "https://www.youtube.com/watch?v=VIDEO_ID_3"),
+            sectionTitle("Skincare Tips for Moms"),
+            videoTile("Skincare for Pregnant Women", "https://www.youtube.com/watch?v=ac5IyS4F6m8"),
+            videoTile("Postpartum Skincare Routine", "https://www.youtube.com/watch?v=0ue6Zw_2Kzg"),
+            videoTile("Healthcare After Miscarriage", "https://www.youtube.com/watch?v=u0Lsdlq5mfo"),
 
-            sectionTitle("🥗 Healthy Food Habits"),
-            videoTile("Top 10 Foods During Pregnancy", "https://www.youtube.com/watch?v=VIDEO_ID_4"),
-            videoTile("Nutrition for Breastfeeding Moms", "https://www.youtube.com/watch?v=VIDEO_ID_5"),
-            videoTile("Foods to Avoid After Miscarriage", "https://www.youtube.com/watch?v=VIDEO_ID_6"),
+            sectionTitle("Healthy Food Habits"),
+            videoTile("Top 10 Foods During Pregnancy", "https://www.youtube.com/watch?v=3GTK6MLPJ9g"),
+            videoTile("Nutrition for Breastfeeding Moms", "https://www.youtube.com/watch?v=VyvhWppQnVE"),
+            videoTile("Foods to Avoid After Miscarriage", "https://www.youtube.com/watch?v=p3QHTdSxljA"),
 
-            sectionTitle("🧘 Self-Care Tips"),
-            videoTile("Mindfulness for Mothers", "https://www.youtube.com/watch?v=VIDEO_ID_7"),
-            videoTile("Gentle Yoga for Healing", "https://www.youtube.com/watch?v=VIDEO_ID_8"),
+
           ],
         ),
       ),
