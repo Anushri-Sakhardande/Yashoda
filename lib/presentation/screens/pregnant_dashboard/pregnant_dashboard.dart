@@ -32,7 +32,7 @@ class PregnantDashboard extends StatelessWidget {
           children: [
             HealthStatusBanner(userId: userProfile["uid"]),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -178,12 +178,10 @@ class PregnantDashboard extends StatelessWidget {
                         children: [
                           ElevatedButton.icon(
                             onPressed: () {
-                              // Navigate to mental health support resources
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MentalHealthScreen(),
+                                  builder: (context) => const MentalHealthScreen(),
                                 ),
                               );
                             },
@@ -194,23 +192,27 @@ class PregnantDashboard extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 10),
-                          ElevatedButton(
+                          ElevatedButton.icon(
                             onPressed: () {
-                              // Navigate to community support groups
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      GroupChatScreen(groupName: "pregnant", userName: userProfile['name']),
+                                  builder: (context) => GroupChatScreen(
+                                    groupName: "pregnant",
+                                    userName: userProfile['name'],
+                                  ),
                                 ),
                               );
                             },
-                            child: Text("Community Support Groups"),
+                            icon: Icon(Icons.groups),
+                            label: Text("Community Support Groups"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
                           ),
                           SizedBox(height: 10),
-                          ElevatedButton(
+                          ElevatedButton.icon(
                             onPressed: () {
-                              // Navigate to self-care tips
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -220,9 +222,14 @@ class PregnantDashboard extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Text("Self-Care"),
+                            icon: Icon(Icons.spa),
+                            label: Text("Self-Care"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
                           ),
-                          ElevatedButton(
+                          SizedBox(height: 10),
+                          ElevatedButton.icon(
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -233,11 +240,16 @@ class PregnantDashboard extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: Text("Assign Health Administrator"),
+                            icon: Icon(Icons.admin_panel_settings),
+                            label: Text("Assign Health Administrator"),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50),
+                            ),
                           ),
                         ],
                       ),
-                    ),
+                    )
+
                   ],
                 ),
               ),

@@ -58,20 +58,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text("Change Role"),
-          content: Text("Select your new role:"),
+          title: Text("Update Life Stage"),
+          content: Text("Please choose the option that best reflects your current stage."),
           actions: [
             TextButton(
               onPressed: () {
-                _updateRole("New Mother", context);
+                _confirmRoleChange("New Mother", context);
               },
-              child: Text("New Mother"),
+              child: Text("I'm now a New Mother"),
             ),
             TextButton(
               onPressed: () {
-                _updateRole("Miscarriage", context);
+                _confirmRoleChange("Experienced Pregnancy Loss", context);
               },
-              child: Text("Miscarriage"),
+              child: Text("I’ve experienced a pregnancy loss"),
             ),
           ],
         );
@@ -79,22 +79,58 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
+  void _confirmRoleChange(String newRole, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext confirmContext) {
+        return AlertDialog(
+          title: Text("Confirm Change"),
+          content: Text(
+            newRole == "Experienced Pregnancy Loss"
+                ? "We're here for you. Updating your stage will help us provide gentle and supportive features tailored to your journey. Would you like to proceed?"
+                : "Updating your profile will tailor the experience to your current life stage. Proceed?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(confirmContext),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(confirmContext);
+                _updateRole(newRole, context);
+              },
+              child: Text("Yes, update"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   void _updateRole(String newRole, BuildContext context) async {
     try {
       Map<String, dynamic> updateData = {"role": newRole};
 
       if (newRole == "New Mother") {
-        updateData["babyMonths"] = 0; // Initialize baby months
-        updateData.remove("pregnancyWeeks"); // Remove pregnancy weeks
-      } else if (newRole == "Miscarriage") {
-        updateData.remove("pregnancyWeeks"); // Remove pregnancy tracking
+        updateData["babyMonths"] = 0;
+        updateData.remove("pregnancyWeeks");
+      } else if (newRole == "Experienced Pregnancy Loss") {
+        updateData.remove("pregnancyWeeks");
       }
 
       await FirebaseFirestore.instance.collection("users").doc(uid).update(updateData);
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Role updated to $newRole")),
+        SnackBar(
+          content: Text(
+            newRole == "Experienced Pregnancy Loss"
+                ? "We're sending you strength. Your profile has been updated with care."
+                : "Profile updated to reflect your new journey as a $newRole.",
+          ),
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

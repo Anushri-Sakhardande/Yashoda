@@ -40,7 +40,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final authService = AuthService();
 
     return Scaffold(
-      appBar: AppBar(title: Text("Register")),
+      appBar: AppBar(title: Text("Register"),
+      backgroundColor: Color(0xFFF4B860),),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(

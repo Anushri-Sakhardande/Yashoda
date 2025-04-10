@@ -14,7 +14,7 @@ class HealthLineChart extends StatefulWidget {
 
 class _HealthLineChartState extends State<HealthLineChart> {
   String selectedParameter = "weight";
-  List<String> parameterOptions = ["weight", "hemoglobin", "bloodPressure"];
+  List<String> parameterOptions = ["weight", "hemoglobin", "bloodPressure","bloodSugar"];
   List<Map<String, dynamic>> entries = [];
 
   @override
@@ -36,7 +36,8 @@ class _HealthLineChartState extends State<HealthLineChart> {
         "lastUpdated": (doc["lastUpdated"] as Timestamp).toDate(),
         "weight": doc.data()["weight"],
         "hemoglobin": doc.data()["hemoglobin"],
-        "bloodPressure": doc.data()["bloodPressure"]
+        "bloodPressure": doc.data()["bloodPressure"],
+        "bloodSugar": doc.data()["bloodSugar"]
       };
     }).toList();
 
@@ -119,7 +120,8 @@ class _HealthLineChartState extends State<HealthLineChart> {
                   lineBarsData: [
                     LineChartBarData(
                       spots: getChartData(),
-                      isCurved: true,
+                      color: Colors.deepPurple,
+                      isCurved: false,
                       barWidth: 2,
                       dotData: FlDotData(show: true),
                       belowBarData: BarAreaData(show: false),

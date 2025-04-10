@@ -1,17 +1,17 @@
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services") // ✅ Firebase plugin
+    id("com.google.gms.google-services")
     id("kotlin-android")
-    id("dev.flutter.flutter-gradle-plugin") // ✅ Flutter plugin comes last
+    id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.yashoda" // ✅ This should match your Firebase registration
+    namespace = "com.example.yashoda"
     compileSdk = 35
     ndkVersion = "29.0.13113456"
 
     defaultConfig {
-        applicationId = "com.example.yashoda" // ✅ Same as Firebase package
+        applicationId = "com.example.yashoda"
         minSdk = 23
         targetSdk = 34
         versionCode = flutter.versionCode

@@ -15,6 +15,7 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
 
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _bloodPressureController = TextEditingController();
+  final TextEditingController _bloodSugarController = TextEditingController();
   final TextEditingController _hemoglobinController = TextEditingController();
   final TextEditingController _symptomsController = TextEditingController();
   final TextEditingController _exerciseRoutineController = TextEditingController();
@@ -32,6 +33,7 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
         final entryData = {
           "weight": double.tryParse(_weightController.text) ?? 0.0,
           "bloodPressure": _bloodPressureController.text,
+          "bloodSugar": double.tryParse(_bloodSugarController.text) ?? 0.0,
           "hemoglobin": double.tryParse(_hemoglobinController.text) ?? 0.0,
           "symptoms": _symptomsController.text.split(",").map((s) => s.trim()).toList(),
           "exerciseRoutine": _exerciseRoutineController.text,
@@ -77,6 +79,11 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
                 controller: _bloodPressureController,
                 decoration: InputDecoration(labelText: "Blood Pressure"),
                 validator: (value) => value!.isEmpty ? "Please enter blood pressure" : null,
+              ),
+              TextFormField(
+                controller: _bloodSugarController,
+                decoration: InputDecoration(labelText: "Blood Sugar"),
+                validator: (value) => value!.isEmpty ? "Please enter blood sugar" : null,
               ),
               TextFormField(
                 controller: _hemoglobinController,

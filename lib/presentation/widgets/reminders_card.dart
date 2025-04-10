@@ -96,7 +96,6 @@ class _RemindersCardState extends State<RemindersCard> {
               controller: reminderController,
               decoration: InputDecoration(labelText: "Reminder Title"),
             ),
-            SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
                 TimeOfDay? pickedTime = await showTimePicker(
