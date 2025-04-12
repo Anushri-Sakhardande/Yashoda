@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../appointment/admin_appointment.dart';
 import '../appointment/upcoming_appointments.dart';
-//import '../announcement/announcement_card_section.dart';
+import '../announcement/announcement_card_section.dart';
 
 class AdminDashboard extends StatefulWidget {
   final dynamic userProfile;
@@ -50,13 +50,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
               child: AdminAppointmentsScreen(adminId: widget.userProfile["uid"]),
             ),
 
-            // // Announcements (Expandable)
-            // _buildExpandableCard(
-            //   title: "Announcements",
-            //   expanded: _announcementsExpanded,
-            //   onExpandToggle: () => setState(() => _announcementsExpanded = !_announcementsExpanded),
-            //   child: AnnouncementCardSection(adminId: widget.userProfile["uid"]),
-            // ),
+            // Announcements (Expandable)
+            _buildExpandableCard(
+              title: "Announcements",
+              expanded: _announcementsExpanded,
+              onExpandToggle: () => setState(() => _announcementsExpanded = !_announcementsExpanded),
+              child: AnnouncementCard(),
+            ),
           ],
         ),
       ),

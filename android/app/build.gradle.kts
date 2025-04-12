@@ -7,8 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.yashoda"
-    compileSdk = 35
-    ndkVersion = "29.0.13113456"
+    compileSdk = 35  // Change this to 33 for better notification support
 
     defaultConfig {
         applicationId = "com.example.yashoda"
@@ -40,5 +39,7 @@ flutter {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-messaging:23.1.1")
+    implementation("com.google.android.gms:play-services-base:18.1.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

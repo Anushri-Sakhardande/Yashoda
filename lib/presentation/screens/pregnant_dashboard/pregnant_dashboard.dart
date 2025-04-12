@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:yashoda/presentation/screens/appointment/search_admin.dart';
 import '../../widgets/custom_app_bar.dart';
@@ -13,31 +15,67 @@ import '../../widgets/health_graph.dart';
 import '../mental_health/MentalHealthScreen.dart';
 import '../selfcare/SelfCareScreen.dart';
 
-class PregnantDashboard extends StatelessWidget {
+class PregnantDashboard extends StatefulWidget {
   final dynamic userProfile;
 
   PregnantDashboard({required this.userProfile});
+
+  @override
+  _PregnantDashboardState createState() => _PregnantDashboardState();
+}
+
+class _PregnantDashboardState extends State<PregnantDashboard> {
+
+  Future<void> updateFcmToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String? token = await FirebaseMessaging.instance.getToken();
+
+      if (token != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'fcmToken': token,
+        });
+      }
+
+      // Optional: listen for token refresh
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'fcmToken': newToken,
+        });
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateFcmToken(); // <--- call it here
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Your Well-being Dashboard",
-        uid: userProfile["uid"],
-        userProfile: userProfile,
+        uid: widget.userProfile["uid"],
+        userProfile: widget.userProfile,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HealthStatusBanner(userId: userProfile["uid"]),
+            HealthStatusBanner(userId: widget.userProfile["uid"]),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome, ${userProfile["name"]}",
+                    "Welcome, ${widget.userProfile["name"]}",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
@@ -56,7 +94,7 @@ class PregnantDashboard extends StatelessWidget {
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection("users")
-                          .doc(userProfile["uid"])
+                          .doc(widget.userProfile["uid"])
                           .collection("healthStatusEntries")
                           .orderBy("lastUpdated", descending: true)
                           .limit(1) // Only fetch the most recent entry
@@ -83,7 +121,7 @@ class PregnantDashboard extends StatelessWidget {
                           child: HealthStatusCircle(
                             healthData: latestHealthData,
                             centerText:
-                                "${userProfile["pregnancyWeeks"]} Weeks of Pregnancy",
+                                "${widget.userProfile["pregnancyWeeks"]} Weeks of Pregnancy",
                           ),
                         );
                       },
@@ -91,7 +129,7 @@ class PregnantDashboard extends StatelessWidget {
 
                     SizedBox(height: 10),
 
-                    HealthLineChart(userId: userProfile["uid"]),
+                    HealthLineChart(userId: widget.userProfile["uid"]),
 
                     // Navigate to Health Status Update
                     ElevatedButton(
@@ -100,7 +138,7 @@ class PregnantDashboard extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => HealthStatusScreen(
-                              userId: userProfile["uid"],
+                              userId: widget.userProfile["uid"],
                             ),
                           ),
                         );
@@ -122,7 +160,7 @@ class PregnantDashboard extends StatelessWidget {
                     Container(
                       height: 150, // Define height to prevent layout issues
                       child: UpcomingAppointmentsScreen(
-                        userId: userProfile["uid"],
+                        userId: widget.userProfile["uid"],
                         isAdmin:
                             false, // Change to true if it's an admin dashboard
                       ),
@@ -130,15 +168,15 @@ class PregnantDashboard extends StatelessWidget {
 
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile.exists &&
-                            userProfile.data()?.containsKey("assignedAdmin") ==
+                        if (widget.userProfile.exists &&
+                            widget.userProfile.data()?.containsKey("assignedAdmin") ==
                                 true) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => BookAppointmentScreen(
-                                userId: userProfile["uid"],
-                                adminId: userProfile["assignedAdmin"],
+                                userId: widget.userProfile["uid"],
+                                adminId: widget.userProfile["assignedAdmin"],
                               ),
                             ),
                           );
@@ -147,7 +185,7 @@ class PregnantDashboard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => SearchAdminScreen(
-                                userUID: userProfile["uid"],
+                                userUID: widget.userProfile["uid"],
                               ),
                             ),
                           );
@@ -168,7 +206,7 @@ class PregnantDashboard extends StatelessWidget {
                     ),
 
                     Container(
-                      height: 200, // Define height to prevent layout issues
+                      width: 300, // Define height to prevent layout issues
                       child: RemindersCard(),
                     ),
 
@@ -199,7 +237,7 @@ class PregnantDashboard extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => GroupChatScreen(
                                     groupName: "pregnant",
-                                    userName: userProfile['name'],
+                                    userName: widget.userProfile['name'],
                                   ),
                                 ),
                               );
@@ -217,7 +255,7 @@ class PregnantDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SelfCareScreen(
-                                    userProfile: userProfile,
+                                    userProfile: widget.userProfile,
                                   ),
                                 ),
                               );
@@ -235,7 +273,7 @@ class PregnantDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SearchAdminScreen(
-                                    userUID: userProfile["uid"],
+                                    userUID: widget.userProfile["uid"],
                                   ),
                                 ),
                               );

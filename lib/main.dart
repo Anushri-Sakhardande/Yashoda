@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:http/http.dart' as http;
 import 'firebase_options.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Dashboards
 import 'package:yashoda/presentation/screens/pregnant_dashboard/pregnant_dashboard.dart';
@@ -17,13 +19,22 @@ import 'package:yashoda/presentation/screens/miscarried_dashboard/miscarried_das
 import 'presentation/screens/auth/login_screen.dart';
 
 // ChatBot Button
-import 'package:yashoda/presentation/widgets/ChatBotButton.dart'; // 👈 Make sure this file exists
+import 'package:yashoda/presentation/widgets/ChatBotButton.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // Make sure this is correct
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MyApp());
 }
 

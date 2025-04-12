@@ -12,32 +12,71 @@ import '../../widgets/health_graph.dart';
 import '../community_chat/group_chat_screen.dart';
 import '../mental_health/MentalHealthScreen.dart';
 import '../selfcare/SelfCareScreen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class MiscarriedDashboard extends StatelessWidget {
+
+class MiscarriedDashboard extends StatefulWidget {
   final dynamic userProfile;
 
   MiscarriedDashboard({required this.userProfile});
+
+  @override
+  _MiscarriedDashboardState createState() => _MiscarriedDashboardState();
+}
+
+class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
+
+  Future<void> updateFcmToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String? token = await FirebaseMessaging.instance.getToken();
+
+      if (token != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'fcmToken': token,
+        });
+      }
+
+      // Optional: listen for token refresh
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'fcmToken': newToken,
+        });
+      });
+      print(token);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateFcmToken();// <--- call it here
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Your Well-being Dashboard",
-        uid: userProfile["uid"],
-        userProfile: userProfile,
+        uid: widget.userProfile["uid"],
+        userProfile: widget.userProfile,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HealthStatusBanner(userId: userProfile["uid"]),
+            HealthStatusBanner(userId: widget.userProfile["uid"]),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome, ${userProfile["name"]}",
+                    "Welcome, ${widget.userProfile["name"]}",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
@@ -57,7 +96,7 @@ class MiscarriedDashboard extends StatelessWidget {
                     StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection("users")
-                          .doc(userProfile["uid"])
+                          .doc(widget.userProfile["uid"])
                           .collection("healthStatusEntries")
                           .orderBy("lastUpdated", descending: true)
                           .limit(1) // Only fetch the most recent entry
@@ -93,7 +132,7 @@ class MiscarriedDashboard extends StatelessWidget {
 
                     SizedBox(height: 10),
 
-                    HealthLineChart(userId: userProfile["uid"]),
+                    HealthLineChart(userId: widget.userProfile["uid"]),
 
                     // Navigate to Health Status Update
                     ElevatedButton(
@@ -104,7 +143,7 @@ class MiscarriedDashboard extends StatelessWidget {
                             builder:
                                 (context) =>
                                 HealthStatusScreen(
-                                  userId: userProfile["uid"],
+                                  userId: widget.userProfile["uid"],
                                 ),
                           ),
                         );
@@ -127,14 +166,14 @@ class MiscarriedDashboard extends StatelessWidget {
                     Container(
                       height: 150, // Define height to prevent layout issues
                       child: UpcomingAppointmentsScreen(
-                        userId: userProfile["uid"],
+                        userId: widget.userProfile["uid"],
                         isAdmin:
                         false, // Change to true if it's an admin dashboard
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if (userProfile.exists && userProfile
+                        if (widget.userProfile.exists && widget.userProfile
                             .data()
                             ?.containsKey("assignedAdmin") == true) {
                           Navigator.push(
@@ -143,8 +182,8 @@ class MiscarriedDashboard extends StatelessWidget {
                               builder:
                                   (context) =>
                                   BookAppointmentScreen(
-                                    userId: userProfile["uid"],
-                                    adminId: userProfile["assignedAdmin"],
+                                    userId: widget.userProfile["uid"],
+                                    adminId: widget.userProfile["assignedAdmin"],
                                   ),
                             ),
                           );
@@ -155,7 +194,7 @@ class MiscarriedDashboard extends StatelessWidget {
                               builder:
                                   (context) =>
                                   SearchAdminScreen(
-                                    userUID: userProfile["uid"],
+                                    userUID: widget.userProfile["uid"],
                                   ),
                             ),
                           );
@@ -175,7 +214,7 @@ class MiscarriedDashboard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      height: 200, // Define height to prevent layout issues
+                      width: 300, // Define height to prevent layout issues
                       child: RemindersCard(),
                     ),
                     Padding(
@@ -205,7 +244,7 @@ class MiscarriedDashboard extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => GroupChatScreen(
                                     groupName: "miscarried",
-                                    userName: userProfile['name'],
+                                    userName: widget.userProfile['name'],
                                   ),
                                 ),
                               );
@@ -223,7 +262,7 @@ class MiscarriedDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SelfCareScreen(
-                                    userProfile: userProfile,
+                                    userProfile: widget.userProfile,
                                   ),
                                 ),
                               );
@@ -241,7 +280,7 @@ class MiscarriedDashboard extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SearchAdminScreen(
-                                    userUID: userProfile["uid"],
+                                    userUID: widget.userProfile["uid"],
                                   ),
                                 ),
                               );

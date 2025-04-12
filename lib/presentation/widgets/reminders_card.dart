@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'dart:convert';
 
 class RemindersCard extends StatefulWidget {
+  const RemindersCard({super.key});
+
   @override
   _RemindersCardState createState() => _RemindersCardState();
 }
@@ -21,10 +23,30 @@ class _RemindersCardState extends State<RemindersCard> {
     _initNotifications();
   }
 
+  Future<void> requestPermissions() async {
+    final androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    await androidImplementation?.requestNotificationsPermission();
+  }
+
   Future<void> _initNotifications() async {
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
+
+    await requestPermissions();
+
     const AndroidInitializationSettings androidInitSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     final InitializationSettings initSettings = InitializationSettings(android: androidInitSettings);
+
     await _notificationsPlugin.initialize(initSettings);
+
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'reminder_channel',
+      'Reminders',
+      importance: Importance.max,
+      description: 'This channel is used for reminder notifications',
+    );
+
+    await _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
   }
 
   Future<void> _loadReminders() async {
@@ -43,7 +65,11 @@ class _RemindersCardState extends State<RemindersCard> {
   }
 
   void _addReminder(String title, TimeOfDay time) {
-    final newReminder = {'title': title, 'hour': time.hour, 'minute': time.minute};
+    final newReminder = {
+      'title': title,
+      'hour': time.hour,
+      'minute': time.minute,
+    };
     setState(() {
       _reminders.add(newReminder);
     });
@@ -51,25 +77,33 @@ class _RemindersCardState extends State<RemindersCard> {
     _saveReminders();
   }
 
-  Future<void> _scheduleNotification(Map<String, dynamic> reminder) async {
-    final now = TimeOfDay.now();
-    final scheduledTime = TimeOfDay(hour: reminder['hour'], minute: reminder['minute']);
+  void _deleteReminder(Map<String, dynamic> reminder) async {
+    setState(() {
+      _reminders.remove(reminder);
+    });
+    await _notificationsPlugin.cancel(reminder.hashCode);
+    _saveReminders();
+  }
 
-    final androidDetails = AndroidNotificationDetails(
-      'reminder_channel', 'Reminders',
-      importance: Importance.high, priority: Priority.high,
-    );
-    final platformDetails = NotificationDetails(android: androidDetails);
+  Future<void> _scheduleNotification(Map<String, dynamic> reminder) async {
+    final tz.TZDateTime scheduledTime = _nextInstanceOfTime(reminder['hour'], reminder['minute']);
+
     await _notificationsPlugin.zonedSchedule(
       reminder.hashCode,
       'Reminder',
       reminder['title'],
-      _nextInstanceOfTime(reminder['hour'], reminder['minute']),
-      platformDetails,
+      scheduledTime,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'reminder_channel',
+          'Reminders',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-
   }
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
@@ -134,7 +168,7 @@ class _RemindersCardState extends State<RemindersCard> {
     return Card(
       margin: EdgeInsets.all(10),
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -147,8 +181,11 @@ class _RemindersCardState extends State<RemindersCard> {
                 title: Text(reminder['title']),
                 subtitle: Text(
                     "${reminder['hour'].toString().padLeft(2, '0')}:${reminder['minute'].toString().padLeft(2, '0')}"),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => _deleteReminder(reminder),
+                ),
               )),
-
             ],
           ),
         ),

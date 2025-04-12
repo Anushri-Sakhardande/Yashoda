@@ -120,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
                   ),
                   onPressed: () async {
+                    if (!mounted) return;
                     setState(() {
                       isLoading = true;
                       errorMessage = "";
