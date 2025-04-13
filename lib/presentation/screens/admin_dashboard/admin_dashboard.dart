@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/custom_app_bar.dart';
-import '../appointment/admin_appointment.dart';
+//import '../appointment/admin_appointment.dart';
 import '../appointment/upcoming_appointments.dart';
 import '../announcement/announcement_card_section.dart';
 
@@ -14,7 +14,7 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  bool _appointmentsExpanded = false;
+  //bool _appointmentsExpanded = false;
   bool _announcementsExpanded = false;
 
   @override
@@ -43,12 +43,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
             SizedBox(height: 20),
 
             // Manage Appointments (Expandable)
-            _buildExpandableCard(
-              title: "Manage Appointments",
-              expanded: _appointmentsExpanded,
-              onExpandToggle: () => setState(() => _appointmentsExpanded = !_appointmentsExpanded),
-              child: AdminAppointmentsScreen(adminId: widget.userProfile["uid"]),
-            ),
+            // _buildExpandableCard(
+            //   title: "Manage Appointments",
+            //   expanded: _appointmentsExpanded,
+            //   onExpandToggle: () => setState(() => _appointmentsExpanded = !_appointmentsExpanded),
+            //   child: AdminAppointmentsScreen(adminId: widget.userProfile["uid"]),
+            // ),
 
             // Announcements (Expandable)
             _buildExpandableCard(

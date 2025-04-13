@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
 
 class AnnouncementCard extends StatefulWidget {
@@ -16,16 +14,6 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
   final _messageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isSending = false;
-  File? _selectedImage;
-
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-    }
-  }
 
 
   Future<void> _submitAnnouncement() async {

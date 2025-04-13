@@ -5,9 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 import 'firebase_options.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Dashboards
 import 'package:yashoda/presentation/screens/pregnant_dashboard/pregnant_dashboard.dart';
