@@ -20,11 +20,12 @@ import 'presentation/screens/auth/login_screen.dart';
 // ChatBot Button
 import 'package:yashoda/presentation/widgets/ChatBotButton.dart';
 
+// Game screen
+import 'package:yashoda/presentation/widgets/game_screen.dart'; // Make sure this path is correct
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 }
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,23 +83,103 @@ class AuthWrapper extends StatelessWidget {
             var userData = userSnapshot.data!;
             String role = userData["role"];
 
-            // 🧠 Role-based dashboard mapping with Chatbot FAB
+            // 🧠 Role-based dashboard mapping with Chatbot and Game FABs
             Map<String, Widget Function()> roleDashboards = {
               "New Mother": () => Scaffold(
                 body: MotherDashboard(userProfile: userData),
-                floatingActionButton: ChatBotButton(),
+                floatingActionButton: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70.0), // Adjust spacing
+                      child: FloatingActionButton(
+                        mini: true,
+                        heroTag: 'gameBtn',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GameScreen()),
+                          );
+                        },
+                        child: Icon(Icons.videogame_asset),
+                        tooltip: 'Play Game',
+                      ),
+                    ),
+                    ChatBotButton(),
+                  ],
+                ),
               ),
               "Pregnant": () => Scaffold(
                 body: PregnantDashboard(userProfile: userData),
-                floatingActionButton: ChatBotButton(),
+                floatingActionButton: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70.0), // Adjust spacing
+                      child: FloatingActionButton(
+                        mini: true,
+                        heroTag: 'gameBtn',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GameScreen()),
+                          );
+                        },
+                        child: Icon(Icons.videogame_asset),
+                        tooltip: 'Play Game',
+                      ),
+                    ),
+                    ChatBotButton(),
+                  ],
+                ),
               ),
               "Miscarriage": () => Scaffold(
                 body: MiscarriedDashboard(userProfile: userData),
-                floatingActionButton: ChatBotButton(),
+                floatingActionButton: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70.0), // Adjust spacing
+                      child: FloatingActionButton(
+                        mini: true,
+                        heroTag: 'gameBtn',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GameScreen()),
+                          );
+                        },
+                        child: Icon(Icons.videogame_asset),
+                        tooltip: 'Play Game',
+                      ),
+                    ),
+                    ChatBotButton(),
+                  ],
+                ),
               ),
               "Health Administrator": () => Scaffold(
                 body: AdminDashboard(userProfile: userData),
-                floatingActionButton: ChatBotButton(),
+                floatingActionButton: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 70.0), // Adjust spacing
+                      child: FloatingActionButton(
+                        mini: true,
+                        heroTag: 'gameBtn',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GameScreen()),
+                          );
+                        },
+                        child: Icon(Icons.videogame_asset),
+                        tooltip: 'Play Game',
+                      ),
+                    ),
+                    ChatBotButton(),
+                  ],
+                ),
               ),
             };
 
