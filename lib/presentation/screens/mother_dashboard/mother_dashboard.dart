@@ -14,6 +14,8 @@ import '../../widgets/health_graph.dart';
 import '../community_chat/group_chat_screen.dart';
 import '../mental_health/MentalHealthScreen.dart';
 import '../selfcare/SelfCareScreen.dart';
+import '../appointment/feedback_history_appointment.dart';
+import '../announcement/announcements_page.dart';
 
 class MotherDashboard extends StatefulWidget {
   final dynamic userProfile;
@@ -169,35 +171,50 @@ class _MotherDashboardState extends State<MotherDashboard> {
                             false,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (widget.userProfile.exists && widget.userProfile.data()?.containsKey("assignedAdmin") == true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                  BookAppointmentScreen(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            if (widget.userProfile.exists && widget.userProfile.data()?.containsKey("assignedAdmin") == true) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookAppointmentScreen(
                                     userId: widget.userProfile["uid"],
                                     adminId: widget.userProfile["assignedAdmin"],
                                   ),
-                            ),
-                          );
-                        }else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                  SearchAdminScreen(
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchAdminScreen(
                                     userUID: widget.userProfile["uid"],
                                   ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text("Book Appointment"),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text("Book Appointment"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FeedbackHistoryScreen(
+                                  userId: widget.userProfile["uid"],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text("Past Appointments"),
+                        ),
+                      ],
                     ),
+
                     SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -223,15 +240,27 @@ class _MotherDashboardState extends State<MotherDashboard> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                  builder: (context) => AnnouncementsPage(),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.announcement),
+                            label: Text("Announcements"),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
                                   builder: (context) => const MentalHealthScreen(),
                                 ),
                               );
                             },
                             icon: Icon(Icons.self_improvement),
                             label: Text("Mental Health & Wellness"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -248,9 +277,7 @@ class _MotherDashboardState extends State<MotherDashboard> {
                             },
                             icon: Icon(Icons.groups),
                             label: Text("Community Support Groups"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -266,9 +293,7 @@ class _MotherDashboardState extends State<MotherDashboard> {
                             },
                             icon: Icon(Icons.spa),
                             label: Text("Self-Care"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -284,11 +309,8 @@ class _MotherDashboardState extends State<MotherDashboard> {
                             },
                             icon: Icon(Icons.admin_panel_settings),
                             label: Text("Assign Health Administrator"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
-
                         ],
                       ),
                     )

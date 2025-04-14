@@ -14,6 +14,8 @@ import '../mental_health/MentalHealthScreen.dart';
 import '../selfcare/SelfCareScreen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../appointment/feedback_history_appointment.dart';
+import '../announcement/announcements_page.dart';
 
 
 class MiscarriedDashboard extends StatefulWidget {
@@ -171,36 +173,48 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                         false, // Change to true if it's an admin dashboard
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (widget.userProfile.exists && widget.userProfile
-                            .data()
-                            ?.containsKey("assignedAdmin") == true) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                  BookAppointmentScreen(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            if (widget.userProfile.exists && widget.userProfile.data()?.containsKey("assignedAdmin") == true) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BookAppointmentScreen(
                                     userId: widget.userProfile["uid"],
                                     adminId: widget.userProfile["assignedAdmin"],
                                   ),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                  SearchAdminScreen(
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchAdminScreen(
                                     userUID: widget.userProfile["uid"],
                                   ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text("Book Appointment"),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text("Book Appointment"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FeedbackHistoryScreen(
+                                  userId: widget.userProfile["uid"],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text("Past Appointments"),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 20),
                     Padding(
@@ -226,15 +240,27 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                  builder: (context) => AnnouncementsPage(),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.announcement),
+                            label: Text("Announcements"),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+                          ),
+                          SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
                                   builder: (context) => const MentalHealthScreen(),
                                 ),
                               );
                             },
                             icon: Icon(Icons.self_improvement),
                             label: Text("Mental Health & Wellness"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -243,7 +269,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => GroupChatScreen(
-                                    groupName: "miscarried",
+                                    groupName: "mother",
                                     userName: widget.userProfile['name'],
                                   ),
                                 ),
@@ -251,9 +277,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                             },
                             icon: Icon(Icons.groups),
                             label: Text("Community Support Groups"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -269,9 +293,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                             },
                             icon: Icon(Icons.spa),
                             label: Text("Self-Care"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                           SizedBox(height: 10),
                           ElevatedButton.icon(
@@ -287,9 +309,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                             },
                             icon: Icon(Icons.admin_panel_settings),
                             label: Text("Assign Health Administrator"),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                            ),
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
                           ),
                         ],
                       ),
