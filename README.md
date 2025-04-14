@@ -1,4 +1,4 @@
-# 🌸 Maternal & Child Healthcare App
+# 🌸 Yashoda
 
 A comprehensive and empathetic mobile application built with Flutter and Firebase to support expecting mothers, new mothers, and women who have experienced miscarriage. This app offers health reminders, emotional support, community engagement, fitness tracking, medical data monitoring, appointment booking, announcements from health administrators, and an integrated chatbot for instant assistance.
 
