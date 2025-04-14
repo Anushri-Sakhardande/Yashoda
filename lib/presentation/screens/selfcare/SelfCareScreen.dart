@@ -69,7 +69,7 @@ class SelfCareScreen extends StatelessWidget {
               videoTile("Complete Pregnancy Guide", "https://www.youtube.com/watch?v=_dVuHFdUN0c"),
             ],
 
-            if (role == "Mother") ...[
+            if (role == "New Mother") ...[
               sectionTitle("Post-Pregnancy Skincare"),
               videoTile("Postpartum Skincare Routine", "https://www.youtube.com/watch?v=0ue6Zw_2Kzg"),
               videoTile("Skincare for Moms", "https://www.youtube.com/watch?v=UfIMSJmopM8"),

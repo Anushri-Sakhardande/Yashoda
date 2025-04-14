@@ -26,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   builder: (context) => EditProfileScreen(uid: uid, userData: userProfile),
                 ),
               );
-            } else if (choice == "Change Role" && userProfile["role"] == "Pregnant") {
+            } else if (choice == "Change Role") {
               _showRoleChangeDialog(context);
             } else if (choice == "View Details") {
               _showUserDetailsDialog(context);
@@ -42,8 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           itemBuilder: (BuildContext context) {
             return [
               PopupMenuItem(value: "Edit Profile", child: Text("Edit Profile")),
-              if (userProfile["role"] == "Pregnant")
-                PopupMenuItem(value: "Change Role", child: Text("Change Role")),
+              PopupMenuItem(value: "Change Role", child: Text("Change Role")),
               PopupMenuItem(value: "View Details", child: Text("View Details")),
               PopupMenuItem(value: "Logout", child: Text("Logout")),
             ];
@@ -54,6 +53,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   void _showRoleChangeDialog(BuildContext context) {
+    final currentRole = userProfile["role"];
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -61,34 +62,63 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           title: Text("Update Life Stage"),
           content: Text("Please choose the option that best reflects your current stage."),
           actions: [
-            TextButton(
-              onPressed: () {
-                _confirmRoleChange("New Mother", context);
-              },
-              child: Text("I'm now a New Mother"),
-            ),
-            TextButton(
-              onPressed: () {
-                _confirmRoleChange("Experienced Pregnancy Loss", context);
-              },
-              child: Text("I’ve experienced a pregnancy loss"),
-            ),
+            if (currentRole != "New Mother")
+              TextButton(
+                onPressed: () {
+                  _confirmRoleChange("New Mother", context);
+                },
+                child: Text("I'm now a New Mother"),
+              ),
+            if (currentRole != "Miscarried")
+              TextButton(
+                onPressed: () {
+                  _confirmRoleChange("Miscarried", context);
+                },
+                child: Text("I’ve experienced a pregnancy loss"),
+              ),
+            if (currentRole != "Pregnant")
+              TextButton(
+                onPressed: () {
+                  _confirmRoleChange("Pregnant", context);
+                },
+                child: Text("I'm now Pregnant"),
+              ),
           ],
         );
       },
     );
   }
 
+
   void _confirmRoleChange(String newRole, BuildContext context) {
+    final TextEditingController weeksController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext confirmContext) {
         return AlertDialog(
           title: Text("Confirm Change"),
-          content: Text(
-            newRole == "Experienced Pregnancy Loss"
-                ? "We're here for you. Updating your stage will help us provide gentle and supportive features tailored to your journey. Would you like to proceed?"
-                : "Updating your profile will tailor the experience to your current life stage. Proceed?",
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                newRole == "Experienced Pregnancy Loss"
+                    ? "We're here for you. Updating your stage will help us provide gentle and supportive features tailored to your journey. Would you like to proceed?"
+                    : "Updating your profile will tailor the experience to your current life stage. Please confirm.",
+              ),
+              if (newRole == "Pregnant")
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: TextField(
+                    controller: weeksController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: "Enter number of pregnancy weeks",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+            ],
           ),
           actions: [
             TextButton(
@@ -97,8 +127,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             TextButton(
               onPressed: () {
+                String? weeksText = weeksController.text.trim();
+                if (newRole == "Pregnant" && (weeksText.isEmpty || int.tryParse(weeksText) == null)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Please enter a valid number of weeks.")),
+                  );
+                  return;
+                }
+
                 Navigator.pop(confirmContext);
-                _updateRole(newRole, context);
+                _updateRole(newRole, context, pregnancyWeeks: newRole == "Pregnant" ? int.parse(weeksText) : null);
               },
               child: Text("Yes, update"),
             ),
@@ -109,20 +147,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
 
-  void _updateRole(String newRole, BuildContext context) async {
+
+  void _updateRole(String newRole, BuildContext context, {int? pregnancyWeeks}) async {
     try {
       Map<String, dynamic> updateData = {"role": newRole};
 
       if (newRole == "New Mother") {
         updateData["babyMonths"] = 0;
         updateData.remove("pregnancyWeeks");
+      } else if (newRole == "Pregnant") {
+        updateData["pregnancyWeeks"] = pregnancyWeeks ?? 0;
+        updateData.remove("babyMonths");
       } else if (newRole == "Experienced Pregnancy Loss") {
         updateData.remove("pregnancyWeeks");
+        updateData.remove("babyMonths");
       }
 
       await FirebaseFirestore.instance.collection("users").doc(uid).update(updateData);
 
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -138,6 +180,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
   }
+
 
 
   void _showUserDetailsDialog(BuildContext context) {

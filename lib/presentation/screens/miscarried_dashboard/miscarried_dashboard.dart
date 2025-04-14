@@ -49,7 +49,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
           'fcmToken': newToken,
         });
       });
-      print(token);
+      //print(token);
     }
   }
 
@@ -269,7 +269,7 @@ class _MiscarriedDashboardState extends State<MiscarriedDashboard> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => GroupChatScreen(
-                                    groupName: "mother",
+                                    groupName: "miscarried",
                                     userName: widget.userProfile['name'],
                                   ),
                                 ),

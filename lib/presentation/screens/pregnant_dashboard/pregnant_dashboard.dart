@@ -266,7 +266,7 @@ class _PregnantDashboardState extends State<PregnantDashboard> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => GroupChatScreen(
-                                    groupName: "mother",
+                                    groupName: "pregnant",
                                     userName: widget.userProfile['name'],
                                   ),
                                 ),

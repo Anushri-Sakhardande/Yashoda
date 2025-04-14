@@ -62,7 +62,7 @@ class _HealthStatusScreenState extends State<HealthStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Health Status")),
+      appBar: AppBar(title: Text("Add Health Status"), backgroundColor: Color(0xFFF4B860)),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Form(
