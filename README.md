@@ -41,8 +41,6 @@ lib/services/chat_service.dart
 final openAiApiKey = 'YOUR_OPENAI_API_KEY_HERE';
 ```
 
-Make sure **not to expose your key in public repositories.**
-
 ---
 
 ## 🚀 Getting Started
@@ -96,9 +94,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## ❤️ Acknowledgements
 
-- OpenAI for the powerful GPT API
+- Authors' mothers for the advice and guidance through their lived experiences<3
+- OpenRouter for the powerful GPT API
 - Firebase for the free-tier backend
 - Flutter Devs for community packages and design inspiration
-- Authors' mother's for the advice and guidance
-
+  
 ---
