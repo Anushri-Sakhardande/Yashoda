@@ -51,7 +51,7 @@ Make sure **not to expose your key in public repositories.**
 
 - Flutter SDK
 - Firebase Project
-- OpenAI API Key (for chatbot)
+- OpenRouter API Key (for chatbot)
 
 ### Installation
 
