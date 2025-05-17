@@ -1,4 +1,4 @@
-# 🌸 Maternal & Child Healthcare App
+# 🤰 Yashoda
 
 A comprehensive and empathetic mobile application built with Flutter and Firebase to support expecting mothers, new mothers, and women who have experienced miscarriage. This app offers health reminders, emotional support, community engagement, fitness tracking, medical data monitoring, appointment booking, announcements from health administrators, and an integrated chatbot for instant assistance.
 
@@ -41,8 +41,6 @@ lib/services/chat_service.dart
 final openAiApiKey = 'YOUR_OPENAI_API_KEY_HERE';
 ```
 
-Make sure **not to expose your key in public repositories.**
-
 ---
 
 ## 🚀 Getting Started
@@ -51,7 +49,7 @@ Make sure **not to expose your key in public repositories.**
 
 - Flutter SDK
 - Firebase Project
-- OpenAI API Key (for chatbot)
+- OpenRouter API Key (for chatbot)
 
 ### Installation
 
@@ -81,6 +79,11 @@ flutter run
 @Anushri-Sakhardande
 
 
+<a href="https://github.com/Anushri-Sakhardande/Yashoda/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Anushri-Sakhardande/Yashoda" />
+</a>
+
+
 ---
 
 ## 📄 License
@@ -91,9 +94,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## ❤️ Acknowledgements
 
-- OpenAI for the powerful GPT API
+- Authors' mothers for the advice and guidance through their lived experiences<3
+- OpenRouter for the powerful GPT API
 - Firebase for the free-tier backend
 - Flutter Devs for community packages and design inspiration
-- Authors' mother's for the advice and guidance
-
+  
 ---
