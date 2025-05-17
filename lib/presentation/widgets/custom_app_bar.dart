@@ -102,7 +102,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                newRole == "Experienced Pregnancy Loss"
+                newRole == "Miscarried"
                     ? "We're here for you. Updating your stage will help us provide gentle and supportive features tailored to your journey. Would you like to proceed?"
                     : "Updating your profile will tailor the experience to your current life stage. Please confirm.",
               ),
@@ -168,7 +168,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            newRole == "Experienced Pregnancy Loss"
+            newRole == "Miscarried"
                 ? "We're sending you strength. Your profile has been updated with care."
                 : "Profile updated to reflect your new journey as a $newRole.",
           ),
